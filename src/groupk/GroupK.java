@@ -5,6 +5,7 @@
 package groupk;
 
 import Alex.QuizGUI;
+import Tiernan.Glossary;
 import Roko.CalculatorEditor;
 import Roko.CalculatorMenu;
 
@@ -39,6 +40,11 @@ public class GroupK {
         alexsMenu.setLocationRelativeTo(null);
         ourGUI.setQuizMenu(alexsMenu);
         
+        //Tiernan's menu initialisation statements
+        Glossary tiernansMenu = new Glossary();
+        tiernansMenu.setMainMenu(ourGUI);
+        tiernansMenu.setLocationRelativeTo(null);
+        ourGUI.setGlossaryMenu(tiernansMenu);
         // render the GUI
         ourGUI.setVisible(true);
     }

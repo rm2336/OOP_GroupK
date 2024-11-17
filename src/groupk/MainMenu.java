@@ -1,6 +1,7 @@
 package groupk;
 
 import Alex.QuizGUI;
+import Tiernan.Glossary;
 import Roko.CalculatorEditor;
 import Roko.CalculatorMenu;
 
@@ -20,6 +21,7 @@ public class MainMenu extends javax.swing.JFrame {
      */
     private CalculatorMenu rokosMenu;
     private QuizGUI alexsMenu;
+    private Glossary tiernansMenu;
     public MainMenu() {
         initComponents();
     }
@@ -30,6 +32,10 @@ public class MainMenu extends javax.swing.JFrame {
     
     public void setQuizMenu(QuizGUI menu) {
         alexsMenu = menu;
+    }
+    
+    public void setGlossaryMenu(Glossary menu) {
+        tiernansMenu = menu;
     }
 
     /**
@@ -82,6 +88,11 @@ public class MainMenu extends javax.swing.JFrame {
         glossaryBTN.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 glossaryBTNMouseEntered(evt);
+            }
+        });
+        glossaryBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                glossaryBTNActionPerformed(evt);
             }
         });
 
@@ -190,6 +201,12 @@ public class MainMenu extends javax.swing.JFrame {
         this.setVisible(false);
         alexsMenu.setVisible(true);
     }//GEN-LAST:event_quizBTNActionPerformed
+
+    private void glossaryBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_glossaryBTNActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        tiernansMenu.setVisible(true);
+    }//GEN-LAST:event_glossaryBTNActionPerformed
 
     /**
      * @param args the command line arguments
