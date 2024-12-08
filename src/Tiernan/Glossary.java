@@ -4,7 +4,7 @@
  */
 package Tiernan;
 
-import groupk.MainMenu;
+import groupk_final.MainMenu;
 /**
  *
  * @author tiern
