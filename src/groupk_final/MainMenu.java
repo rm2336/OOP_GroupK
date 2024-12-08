@@ -1,7 +1,7 @@
 package groupk_final;
 
 import Alex.QuizGUI;
-//import Tiernan.Glossary;
+import Tiernan.MainGlossaryForm;
 import Roko.CalculatorEditor;
 import Roko.CalculatorMenu;
 
@@ -21,6 +21,7 @@ public class MainMenu extends javax.swing.JFrame {
      */
     private CalculatorMenu rokosMenu;
     private QuizGUI alexsMenu;
+    private MainGlossaryForm tiernansMenu;
     //private Glossary tiernansMenu;
     public MainMenu() {
         initComponents();
@@ -34,9 +35,9 @@ public class MainMenu extends javax.swing.JFrame {
         alexsMenu = menu;
     }
     
-    //public void setGlossaryMenu(Glossary menu) {
-    //    tiernansMenu = menu;
-    //}
+    public void setGlossaryMenu(MainGlossaryForm menu) {
+        tiernansMenu = menu;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -103,7 +104,6 @@ public class MainMenu extends javax.swing.JFrame {
         hintTA.setEditable(false);
         hintTA.setColumns(20);
         hintTA.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        hintTA.setForeground(new java.awt.Color(0, 204, 0));
         hintTA.setLineWrap(true);
         hintTA.setRows(5);
         hintTA.setWrapStyleWord(true);
@@ -204,8 +204,8 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void glossaryBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_glossaryBTNActionPerformed
         // TODO add your handling code here:
-        //this.setVisible(false);
-        //tiernansMenu.setVisible(true);
+        this.setVisible(false);
+        tiernansMenu.setVisible(true);
     }//GEN-LAST:event_glossaryBTNActionPerformed
 
     /**
