@@ -4,8 +4,6 @@
  */
 package Roko;
 
-import groupk.MainMenu;
-
 /**
  *
  * @author rokom
@@ -16,12 +14,73 @@ public class CalculatorEditor extends javax.swing.JFrame {
      * Creates new form CalculatorEditor
      */
     private CalculatorMenu calcMenu;
+    // currentOperation = whether a new record is being added or if 
+    // an existing record is being modified
+    private String currentOperation;
+    private Subsidy tempSubsidy;
+    private Campaign tempCampaign;
+    private Programme tempProgramme;
+    
     public CalculatorEditor() {
         initComponents();
     }
     
     public void setCalculatorMenu(CalculatorMenu menu){
         calcMenu = menu;
+    }
+    
+    public void setCurrentOperation(String operation) {
+        currentOperation = operation;
+    }
+    
+    public String getCurrentOperation() {
+        return currentOperation;
+    }
+    
+    // methods to return components
+    public javax.swing.JLabel getDerived1LBL() {
+        return derived1LBL;
+    }
+    
+    public javax.swing.JLabel getDerived2LBL() {
+        return derived2LBL;
+    }
+    
+    public javax.swing.JTextField getIdTF() {
+        return idTF;
+    }
+    
+    public javax.swing.JTextField getNameTF() {
+        return nameTF;
+    }
+    
+    public javax.swing.JTextField getDateTF() {
+        return dateTF;
+    }
+    
+    public javax.swing.JTextField getGoalTF() {
+        return goalTF;
+    }
+    
+    public javax.swing.JTextField getAmountTF() {
+        return amountTF;
+    }
+    
+    public javax.swing.JTextField getDerived1TF() {
+        return derived1TF;
+    }
+    
+    public javax.swing.JTextField getDerived2TF() {
+        return derived2TF;
+    }
+    
+    public void clearTextFields() {
+        nameTF.setText("");
+        dateTF.setText("");
+        goalTF.setText("");
+        amountTF.setText("");
+        derived1TF.setText("");
+        derived2TF.setText("");
     }
 
     /**
@@ -49,7 +108,7 @@ public class CalculatorEditor extends javax.swing.JFrame {
         derived1TF = new javax.swing.JTextField();
         derived2TF = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        outputTA = new javax.swing.JTextArea();
         submitBTN = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -75,11 +134,21 @@ public class CalculatorEditor extends javax.swing.JFrame {
 
         derived2LBL.setText("Y");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        idTF.setEditable(false);
+
+        outputTA.setEditable(false);
+        outputTA.setColumns(20);
+        outputTA.setLineWrap(true);
+        outputTA.setRows(5);
+        outputTA.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(outputTA);
 
         submitBTN.setText("Submit");
+        submitBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitBTNActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -95,31 +164,28 @@ public class CalculatorEditor extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(goalLBL, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(amountLBL, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(dateLBL, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(derived1LBL, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(derived2LBL, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(derived1LBL, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                                    .addComponent(derived2LBL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(goalTF, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                                    .addComponent(dateTF)
-                                    .addComponent(amountTF)
-                                    .addComponent(derived1TF)
-                                    .addComponent(derived2TF))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(goalTF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                                    .addComponent(amountTF, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(derived1TF, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(derived2TF, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(dateTF)))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(idLBL, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                                        .addComponent(idTF, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(nameLBL)
-                                        .addGap(30, 30, 30)
-                                        .addComponent(nameTF)))
-                                .addGap(38, 38, 38)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(nameLBL)
+                                    .addComponent(idLBL, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(116, 116, 116)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(nameTF)
+                                    .addComponent(idTF))))
+                        .addGap(38, 38, 38)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(22, 22, 22))
         );
@@ -155,7 +221,7 @@ public class CalculatorEditor extends javax.swing.JFrame {
                     .addComponent(derived1TF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(derived2LBL)
+                    .addComponent(derived2LBL, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(derived2TF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -170,8 +236,132 @@ public class CalculatorEditor extends javax.swing.JFrame {
     private void backBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBTNActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
+        if (!calcMenu.getCalcList().isEmpty()) {
+            calcMenu.getDisplayTA().setText(calcMenu.getCalcList().getLast().printDetails());     
+            calcMenu.setNavigatorIndex(calcMenu.getCalcList().size() - 1);
+            System.out.println("NavIndex: " + calcMenu.getNavigatorIndex());
+            calcMenu.getCountLBL().setText(calcMenu.getNavigatorIndex() + 1 + " / " + 
+                    calcMenu.getCalcList().size());
+        }
         calcMenu.setVisible(true);
+        // check if record navigator should be enabled
+        if (calcMenu.getCalcList().size() == 1) { // just one needed to enable editing
+            calcMenu.getEditBTN().setEnabled(true);
+            calcMenu.getDeleteBTN().setEnabled(true);
+            calcMenu.getSaveBTN().setEnabled(true);
+        }
+        else if (calcMenu.getCalcList().size() > 1) { // more than one 
+            calcMenu.getEditBTN().setEnabled(true);
+            calcMenu.getDeleteBTN().setEnabled(true);
+            //calcMenu.getSaveBTN().setEnabled(true);
+            calcMenu.getPreviousBTN().setEnabled(true);
+            calcMenu.getNextBTN().setEnabled(true);
+        }
+        // enable or disable save button if additions have been made
+        if (calcMenu.getFileObjectCount() != calcMenu.getCalcList().size()
+            && calcMenu.getLoadPerformed()) {
+            calcMenu.getSaveBTN().setEnabled(true);
+        }
+        
+        // clear the text fields
+        clearTextFields();      
     }//GEN-LAST:event_backBTNActionPerformed
+
+    private void submitBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitBTNActionPerformed
+        // TODO add your handling code here:
+        if (currentOperation.equals("add")) {
+            if (nameTF.getText().isEmpty() || dateTF.getText().isEmpty()
+                || goalTF.getText().isEmpty() || amountTF.getText().isEmpty()
+                || derived1TF.getText().isEmpty() || derived2TF.getText().isEmpty())
+            {
+                outputTA.setText("One or more text fields have not been populated. Cannot submit.");
+            }
+            else {
+                // check which radio button is selected
+                if (calcMenu.getSubsidyRB().isSelected()) {
+                    tempSubsidy = new Subsidy(nameTF.getText(), dateTF.getText(),
+                    goalTF.getText(), Double.parseDouble(amountTF.getText()), derived1TF.getText(),
+                    Boolean.parseBoolean(derived2TF.getText()));
+                    calcMenu.getCalcList().add(tempSubsidy);
+                    outputTA.setText("Subsidy " + tempSubsidy.getName() + " has been submitted.");
+                    clearTextFields();
+                    idTF.setText(String.valueOf(tempSubsidy.getCurrentId()));
+                    calcMenu.getDisplayTA().setText(tempSubsidy.printDetails());
+                }
+                else if (calcMenu.getCampaignRB().isSelected()) {
+                    tempCampaign = new Campaign(nameTF.getText(), dateTF.getText(),
+                    goalTF.getText(), Double.parseDouble(amountTF.getText()), derived1TF.getText(),
+                    derived2TF.getText());
+                    calcMenu.getCalcList().add(tempCampaign);
+                    outputTA.setText("Campaign " + tempCampaign.getName() + " has been submitted.");
+                    clearTextFields();
+                    idTF.setText(String.valueOf(tempCampaign.getCurrentId()));
+                    calcMenu.getDisplayTA().setText(tempCampaign.printDetails());
+                }
+                else {
+                    tempProgramme = new Programme(nameTF.getText(), dateTF.getText(),
+                    goalTF.getText(), Double.parseDouble(amountTF.getText()), derived1TF.getText(),
+                    Boolean.parseBoolean(derived2TF.getText()));
+                    calcMenu.getCalcList().add(tempProgramme);
+                    outputTA.setText("Programme " + tempProgramme.getName() + " has been submitted.");
+                    clearTextFields();
+                    idTF.setText(String.valueOf(tempProgramme.getCurrentId()));
+                    calcMenu.getDisplayTA().setText(tempProgramme.printDetails());
+                }
+                calcMenu.setNavigatorIndex(calcMenu.getNavigatorIndex() + 1);
+                calcMenu.getCalculateBTN().setEnabled(true);
+            }          
+        }
+        else if (currentOperation.equals("edit")) {
+            String name, date, goal, beneficiary, manager, endDate, department;
+            double amount;
+            boolean isLumpSum, isRecurrent;
+            // read user input
+            name = calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()).getName();
+            date = calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()).getDate();
+            goal = calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()).getGoal();
+            amount = calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()).getAmount();
+            calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()).setName(nameTF.getText());
+            calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()).setDate(dateTF.getText());
+            calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()).setGoal(goalTF.getText());
+            calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()).setAmount(Double.parseDouble(amountTF.getText()));
+            if (calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()) instanceof Subsidy) {
+                beneficiary = ((Subsidy)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).getBeneficiary();
+                ((Subsidy)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).setBeneficiary(derived1TF.getText());
+                isLumpSum = ((Subsidy)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).isIsLumpSum();
+                ((Subsidy)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).setIsLumpSum(Boolean.parseBoolean(derived2TF.getText()));
+                if (!beneficiary.equals(((Subsidy)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).getBeneficiary())
+                        || isLumpSum != ((Subsidy)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).isIsLumpSum())
+                    calcMenu.getSaveBTN().setEnabled(true);
+                
+            }
+            else if (calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()) instanceof Campaign) {
+                manager = ((Campaign)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).getManager();
+                ((Campaign)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).setManager(derived1TF.getText());
+                endDate = ((Campaign)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).getEndDate();
+                ((Campaign)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).setEndDate(derived2TF.getText());
+                if (!manager.equals(((Campaign)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).getManager()) 
+                        || !endDate.equals(((Campaign)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).getEndDate()))
+                    calcMenu.getSaveBTN().setEnabled(true);
+            }
+            else if (calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()) instanceof Programme) {
+                department = ((Programme)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).getDepartment();
+                ((Programme)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).setDepartment(derived1TF.getText());
+                isRecurrent = ((Programme)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).isIsRecurrent();
+                ((Programme)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).setIsRecurrent(Boolean.parseBoolean(derived2TF.getText()));
+                if (!department.equals(((Programme)calcMenu.getCalcList().get(calcMenu.getNavigatorIndex())).getDepartment()))
+                    calcMenu.getSaveBTN().setEnabled(true);
+            }
+            outputTA.setText("");
+            calcMenu.getDisplayTA().setText(calcMenu.getCalcList().get(calcMenu.getNavigatorIndex()).printDetails());
+            this.setVisible(false);
+            calcMenu.setVisible(true);
+            // enable save button if changes are made
+            if (!name.equals(nameTF.getText()) || !date.equals(dateTF.getText()) || !goal.equals(goalTF.getText())
+                    || amount != Double.parseDouble(amountTF.getText())) 
+                calcMenu.getSaveBTN().setEnabled(true);
+        }
+    }//GEN-LAST:event_submitBTNActionPerformed
 
     /**
      * @param args the command line arguments
@@ -223,9 +413,9 @@ public class CalculatorEditor extends javax.swing.JFrame {
     private javax.swing.JLabel idLBL;
     private javax.swing.JTextField idTF;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel nameLBL;
     private javax.swing.JTextField nameTF;
+    private javax.swing.JTextArea outputTA;
     private javax.swing.JButton submitBTN;
     // End of variables declaration//GEN-END:variables
 }
